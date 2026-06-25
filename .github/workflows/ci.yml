@@ -1,0 +1,52 @@
+name: CI
+
+# Run on every push and pull request to main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ---- Java engine: JUnit + JaCoCo coverage ----
+  java-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Run JUnit tests with coverage
+        working-directory: ./engine
+        run: mvn -B test
+
+      - name: Upload JaCoCo coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: engine/target/site/jacoco/
+
+  # ---- Python tooling: pyTest + coverage ----
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        working-directory: ./tooling
+        run: pip install pytest pytest-cov
+
+      - name: Run pyTest with coverage
+        working-directory: ./tooling
+        run: python -m pytest test_generate_logs.py --cov=generate_logs --cov-report=term-missing

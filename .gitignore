@@ -1,0 +1,28 @@
+# ===== Java / Maven (engine/) =====
+engine/target/
+engine/.mvn/
+!engine/.mvn/wrapper/maven-wrapper.jar
+*.class
+engine/*.log
+
+# ===== Python (tooling/) =====
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ===== Generated data =====
+# Mock transaction logs are reproducible via generate_logs.py — don't commit them
+tooling/data/*.jsonl
+
+# ===== JaCoCo coverage output =====
+engine/target/site/jacoco/
+
+# ===== Docker =====
+# (compose file IS committed; only
